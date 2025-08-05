@@ -1,0 +1,71 @@
+:root {
+  --background: oklch(1 0 0); /* 页面背景色 */
+  --foreground: oklch(0.145 0 0); /* 文字主色 */
+  --card: oklch(1 0 0); /* 卡片背景色 */
+  --card-foreground: oklch(0.145 0 0); /* 卡片文字色 */
+  --popover: oklch(1 0 0); /* 弹出层背景色 */
+  --popover-foreground: oklch(0.145 0 0); /* 弹出层文字色 */
+  --primary: oklch(0.205 0 0); /* 主按钮/重要元素背景色 */
+  --primary-foreground: oklch(0.985 0 0); /* 主按钮文字色 */
+  --secondary: oklch(0.97 0 0); /* 次要按钮背景色 */
+  --secondary-foreground: oklch(0.205 0 0); /* 次要按钮文字色 */
+  --muted: oklch(0.97 0 0); /* 弱化内容背景色 */
+  --muted-foreground: oklch(0.556 0 0); /* 弱化文字色 */
+  --accent: oklch(0.97 0 0); /* 强调色背景 */
+  --accent-foreground: oklch(0.205 0 0); /* 强调色文字 */
+  --destructive: oklch(0.577 0.245 27.325); /* 危险操作背景色 */
+  --destructive-foreground: oklch(0.577 0.245 27.325); /* 危险操作文字色 */
+  --border: oklch(0.922 0 0); /* 边框颜色 */
+  --input: oklch(0.922 0 0); /* 输入框背景色 */
+  --ring: oklch(0.708 0 0); /* 焦点环颜色 */
+  --chart-1: oklch(0.646 0.222 41.116); /* 图表数据系列1颜色 */
+  --chart-2: oklch(0.6 0.118 184.704); /* 图表数据系列2颜色 */
+  --chart-3: oklch(0.398 0.07 227.392); /* 图表数据系列3颜色 */
+  --chart-4: oklch(0.828 0.189 84.429); /* 图表数据系列4颜色 */
+  --chart-5: oklch(0.769 0.188 70.08); /* 图表数据系列5颜色 */
+  /* --radius: 0.625rem; */
+  --radius: 0.25rem; /* 基础圆角大小 */
+  --sidebar: oklch(0.985 0 0); /* 侧边栏背景 */
+  --sidebar-foreground: oklch(0.145 0 0); /* 侧边栏文字 */
+  --sidebar-primary: oklch(0.205 0 0); /* 侧边栏主按钮色 */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* 侧边栏主按钮文字色 */
+  --sidebar-accent: oklch(0.97 0 0); /* 侧边栏强调色 */
+  --sidebar-accent-foreground: oklch(0.205 0 0); /* 侧边栏强调文字色 */
+  --sidebar-border: oklch(0.922 0 0); /* 侧边栏边框 */
+  --sidebar-ring: oklch(0.708 0 0); /* 侧边栏焦点环 */
+}
+
+.dark {
+  --background: oklch(0.145 0 0); /* 深色模式页面背景色 */
+  --foreground: oklch(0.985 0 0); /* 深色模式文字主色 */
+  --card: oklch(0.145 0 0); /* 深色模式卡片背景色 */
+  --card-foreground: oklch(0.985 0 0); /* 深色模式卡片文字色 */
+  --popover: oklch(0.145 0 0); /* 深色模式弹出层背景色 */
+  --popover-foreground: oklch(0.985 0 0); /* 深色模式弹出层文字色 */
+  --primary: oklch(0.985 0 0); /* 深色模式主按钮背景色 */
+  --primary-foreground: oklch(0.205 0 0); /* 深色模式主按钮文字色 */
+  --secondary: oklch(0.269 0 0); /* 深色模式次要按钮背景色 */
+  --secondary-foreground: oklch(0.985 0 0); /* 深色模式次要按钮文字色 */
+  --muted: oklch(0.269 0 0); /* 深色模式弱化内容背景色 */
+  --muted-foreground: oklch(0.708 0 0); /* 深色模式弱化文字色 */
+  --accent: oklch(0.269 0 0); /* 深色模式强调色背景 */
+  --accent-foreground: oklch(0.985 0 0); /* 深色模式强调色文字 */
+  --destructive: oklch(0.396 0.141 25.723); /* 深色模式危险操作背景色 */
+  --destructive-foreground: oklch(0.637 0.237 25.331); /* 深色模式危险操作文字色 */
+  --border: oklch(0.269 0 0); /* 深色模式边框颜色 */
+  --input: oklch(0.269 0 0); /* 深色模式输入框背景色 */
+  --ring: oklch(0.439 0 0); /* 深色模式焦点环颜色 */
+  --chart-1: oklch(0.488 0.243 264.376); /* 深色模式图表数据系列1颜色 */
+  --chart-2: oklch(0.696 0.17 162.48); /* 深色模式图表数据系列2颜色 */
+  --chart-3: oklch(0.769 0.188 70.08); /* 深色模式图表数据系列3颜色 */
+  --chart-4: oklch(0.627 0.265 303.9); /* 深色模式图表数据系列4颜色 */
+  --chart-5: oklch(0.645 0.246 16.439); /* 深色模式图表数据系列5颜色 */
+  --sidebar: oklch(0.205 0 0); /* 深色模式侧边栏背景 */
+  --sidebar-foreground: oklch(0.985 0 0); /* 深色模式侧边栏文字 */
+  --sidebar-primary: oklch(0.488 0.243 264.376); /* 深色模式侧边栏主按钮色 */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* 深色模式侧边栏主按钮文字色 */
+  --sidebar-accent: oklch(0.269 0 0); /* 深色模式侧边栏强调色 */
+  --sidebar-accent-foreground: oklch(0.985 0 0); /* 深色模式侧边栏强调文字色 */
+  --sidebar-border: oklch(0.269 0 0); /* 深色模式侧边栏边框 */
+  --sidebar-ring: oklch(0.439 0 0); /* 深色模式侧边栏焦点环 */
+}
