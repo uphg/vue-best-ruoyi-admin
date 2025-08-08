@@ -276,14 +276,16 @@
 </template>
 
 <script setup name="Role">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDict } from '@/utils/dict'
+import { useMessage, useDialog } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
 import { addDateRange } from '@/utils/ruoyi'
 import { treeselect as menuTreeselect, roleMenuTreeselect } from '../menu/menu-api'
 import { addRole, changeRoleStatus, dataScope, delRole, deptTreeSelect, getRole, listRole, updateRole } from '../role-api'
 
 const router = useRouter()
 const { sys_normal_disable } = useDict('sys_normal_disable')
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const roleRef = ref()
 
@@ -362,16 +364,18 @@ function resetQuery() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const roleIds = row.roleId || ids.value
-  ElMessageBox.confirm(`是否确认删除角色编号为"${roleIds}"的数据项?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delRole(roleIds)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除角色编号为"${roleIds}"的数据项?`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delRole(roleIds).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    }
+  })
 }
 
 /** 导出按钮操作 */
@@ -390,16 +394,19 @@ function handleSelectionChange(selection) {
 /** 角色状态修改 */
 function handleStatusChange(row) {
   let text = row.status === '0' ? '启用' : '停用'
-  ElMessageBox.confirm(`确认要"${text}""${row.roleName}"角色吗?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return changeRoleStatus(row.roleId, row.status)
-  }).then(() => {
-    ElMessage.success(`${text}成功`)
-  }).catch(() => {
-    row.status = row.status === '0' ? '1' : '0'
+  dialog.warning({
+    title: '提示',
+    content: `确认要"${text}""${row.roleName}"角色吗?`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return changeRoleStatus(row.roleId, row.status).then(() => {
+        message.success(`${text}成功`)
+      })
+    },
+    onNegativeClick: () => {
+      row.status = row.status === '0' ? '1' : '0'
+    }
   })
 }
 
@@ -562,14 +569,14 @@ function submitForm() {
       if (form.value.roleId != undefined) {
         form.value.menuIds = getMenuAllCheckedKeys()
         updateRole(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         form.value.menuIds = getMenuAllCheckedKeys()
         addRole(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -616,7 +623,7 @@ function submitDataScope() {
   if (form.value.roleId != undefined) {
     form.value.deptIds = getDeptAllCheckedKeys()
     dataScope(form.value).then((response) => {
-      ElMessage.success('修改成功')
+      message.success('修改成功')
       openDataScope.value = false
       getList()
     })

@@ -1,4 +1,4 @@
-import { http } from '@/utils/http-lite'
+import { http } from '@/utils/http'
 
 const RequestPage = defineComponent(() => {
   onMounted(async () => {

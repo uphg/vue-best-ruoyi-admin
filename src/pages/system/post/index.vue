@@ -167,11 +167,13 @@
 </template>
 
 <script setup name="Post">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDict } from '@/utils/dict'
+import { useMessage, useDialog } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
 import { addPost, delPost, getPost, listPost, updatePost } from './post-api'
 
 const { sys_normal_disable } = useDict('sys_normal_disable')
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const postRef = ref()
 
@@ -279,13 +281,13 @@ function submitForm() {
     if (valid) {
       if (form.value.postId != undefined) {
         updatePost(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addPost(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -297,16 +299,18 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const postIds = row.postId || ids.value
-  ElMessageBox.confirm(`是否确认删除岗位编号为"${postIds}"的数据项？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delPost(postIds)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除岗位编号为"${postIds}"的数据项？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delPost(postIds).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    }
+  })
 }
 
 /** 导出按钮操作 */

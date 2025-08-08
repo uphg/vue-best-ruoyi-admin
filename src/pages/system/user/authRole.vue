@@ -54,7 +54,7 @@
 </template>
 
 <script setup name="AuthRole">
-import { ElMessage } from 'element-plus'
+import { useDialog, useMessage } from 'naive-ui'
 import { getAuthRole, updateAuthRole } from './user-api'
 
 const route = useRoute()
@@ -71,6 +71,9 @@ const form = ref({
   userName: undefined,
   userId: undefined,
 })
+
+const message = useMessage()
+const dialog = useDialog()
 
 /** 单击选中行数据 */
 function clickRow(row) {
@@ -101,7 +104,7 @@ function submitForm() {
   const userId = form.value.userId
   const rIds = roleIds.value.join(',')
   updateAuthRole({ userId, roleIds: rIds }).then((response) => {
-    ElMessage.success('授权成功')
+    message.success('授权成功')
     close()
   })
 };

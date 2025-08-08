@@ -18,7 +18,7 @@ import LayoutParentView from '@/components/layout/layout-parent-view'
  * 页面模块动态导入映射
  * @type {Record<string, () => Promise<any>>}
  */
-const pagesModule = import.meta.glob('@/pages/**/*-page.tsx')
+const pagesModule = import.meta.glob('@/pages/**/*.vue')
 
 /**
  * 布局组件映射
@@ -140,8 +140,25 @@ function baseCreateMenus(routes, menusMap, options) {
 function getComponent(componentPath) {
   const layout = layoutsMap?.[componentPath]
   if (layout) return layout
-  const path = componentPath.replace(/^views\/|\.vue$/g, '')
-  return pagesModule[`/src/pages/${path}.tsx`]
+
+  // 清理路径格式
+  const cleanPath = componentPath
+    .replace(/^views\//, '')
+    .replace(/\.(vue|jsx?|tsx?)$/, '')
+    .replace(/^\//, '')
+
+  // 确保路径格式匹配 Vite 的 glob 导入格式
+  console.log('cleanPath')
+  console.log(cleanPath)
+  const modulePath = `/src/pages/${cleanPath}.vue`
+
+  // 返回匹配的组件
+  const component = pagesModule[modulePath]
+  if (!component) {
+    console.error(`未找到组件: ${modulePath}, 可用路径:`, Object.keys(pagesModule).slice(0, 10))
+    return LayoutDefault
+  }
+  return component
 }
 
 /**

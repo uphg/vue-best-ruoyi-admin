@@ -16,6 +16,7 @@ export default antfu({
     'no-restricted-syntax': 'off',
     'no-use-before-define': 'off',
     'no-undef': 'off',
+    'sort-named-imports': 'off',
     'regexp/no-unused-capturing-group': 'off',
     'no-restricted-globals': 'off',
     'unused-imports/no-unused-vars': 'off',
@@ -27,6 +28,8 @@ export default antfu({
       order: ['template', 'script', 'style'],
     }],
     'eslint-comments/no-unlimited-disable': 'off',
+    'jsdoc/require-returns-check': 'off',
+    'jsdoc/require-returns-description': 'off',
   },
 }, {
   files: ['*.tsx', '*.jsx'],

@@ -4,13 +4,7 @@
          <!--部门数据-->
          <el-col :span="4" :xs="24">
             <div class="head-container">
-               <el-input
-                  v-model="deptName"
-                  placeholder="请输入部门名称"
-                  clearable
-                  prefix-icon="Search"
-                  style="margin-bottom: 20px"
-               />
+               <el-input v-model="deptName" placeholder="请输入部门名称" clearable prefix-icon="Search"/>
             </div>
             <div class="head-container">
                <el-tree
@@ -330,10 +324,10 @@
 </template>
 
 <script setup name="User">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { useMessage, useDialog } from 'naive-ui'
 import { getToken } from "@/utils/auth"
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "./user-api"
-import { useDict } from '@/utils/dict' 
+import { useDict } from '@/hooks/use-dict'
 import { addDateRange } from '@/utils/ruoyi'
 
 const router = useRouter()
@@ -371,7 +365,7 @@ const upload = reactive({
   // 设置上传的请求头部
   headers: { Authorization: "Bearer " + getToken() },
   // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
+  url: import.meta.env.VITE_API_BASE_API + "/system/user/importData"
 });
 // 列显隐信息
 const columns = ref([
@@ -410,6 +404,9 @@ const filterNode = (value, data) => {
   if (!value) return true;
   return data.label.indexOf(value) !== -1;
 };
+
+const message = useMessage()
+const dialog = useDialog()
 
 /** 根据名称筛选部门树 */
 watch(deptName, val => {
@@ -463,16 +460,18 @@ function resetQuery() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const userIds = row.userId || ids.value
-  ElMessageBox.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    return delUser(userIds)
-  }).then(() => {
-    getList()
-    ElMessage.success("删除成功")
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: '是否确认删除用户编号为"' + userIds + '"的数据项？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delUser(userIds).then(() => {
+        getList()
+        message.success("删除成功")
+      })
+    }
+  })
 };
 
 /** 导出按钮操作 */
@@ -484,16 +483,19 @@ function handleExport() {
 /** 用户状态修改  */
 function handleStatusChange(row) {
   let text = row.status === "0" ? "启用" : "停用"
-  ElMessageBox.confirm('确认要"' + text + '""' + row.userName + '"用户吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    return changeUserStatus(row.userId, row.status)
-  }).then(() => {
-    ElMessage.success(text + "成功")
-  }).catch(() => {
-    row.status = row.status === "0" ? "1" : "0"
+  dialog.warning({
+    title: '提示',
+    content: '确认要"' + text + '""' + row.userName + '"用户吗?',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return changeUserStatus(row.userId, row.status).then(() => {
+        message.success(text + "成功")
+      })
+    },
+    onNegativeClick: () => {
+      row.status = row.status === "0" ? "1" : "0"
+    }
   })
 };
 
@@ -519,22 +521,32 @@ function handleAuthRole(row) {
 
 /** 重置密码按钮操作 */
 function handleResetPwd(row) {
-  ElMessageBox.prompt('请输入"' + row.userName + '"的新密码', "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    closeOnClickModal: false,
-    inputPattern: /^.{5,20}$/,
-    inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
-    inputValidator: (value) => {
-      if (/<|>|"|'|\||\\/.test(value)) {
-        return "不能包含非法字符：< > \" ' \\\\ |"
+  dialog.create({
+    title: "提示",
+    content: '请输入"' + row.userName + '"的新密码',
+    positiveText: "确定",
+    negativeText: "取消",
+    closeOnEsc: false,
+    maskClosable: false,
+    input: {
+      type: 'password',
+      placeholder: '请输入新密码',
+      validator: (value) => {
+        if (!value || value.length < 5 || value.length > 20) {
+          return "用户密码长度必须介于 5 和 20 之间"
+        }
+        if (/<|>|"|'|\||\\/.test(value)) {
+          return "不能包含非法字符：< > \" ' \\\\ |"
+        }
+        return true
       }
     },
-  }).then(({ value }) => {
-    resetUserPwd(row.userId, value).then(response => {
-      ElMessage.success("修改成功，新密码是：" + value)
-    })
-  }).catch(() => {})
+    onPositiveClick: (value) => {
+      return resetUserPwd(row.userId, value).then(response => {
+        message.success("修改成功，新密码是：" + value)
+      })
+    }
+  })
 };
 
 /** 选择条数  */
@@ -568,7 +580,11 @@ const handleFileSuccess = (response, file, fileList) => {
   if (uploadRef.value) {
     uploadRef.value.handleRemove(file)
   }
-  ElMessageBox.alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
+  dialog.success({
+    title: "导入结果",
+    content: response.msg,
+    positiveText: '确定'
+  })
   getList()
 };
 
@@ -640,13 +656,13 @@ function submitForm() {
     if (valid) {
       if (form.value.userId != undefined) {
         updateUser(form.value).then(response => {
-          ElMessage.success("修改成功")
+          message.success("修改成功")
           open.value = false
           getList()
         })
       } else {
         addUser(form.value).then(response => {
-          ElMessage.success("新增成功")
+          message.success("新增成功")
           open.value = false
           getList()
         })

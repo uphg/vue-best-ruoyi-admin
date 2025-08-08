@@ -47,9 +47,9 @@
             >批量取消授权</el-button>
          </el-col>
          <el-col :span="1.5">
-            <el-button 
-               type="warning" 
-               plain 
+            <el-button
+               type="warning"
+               plain
                icon="Close"
                @click="handleClose"
             >关闭</el-button>
@@ -92,13 +92,15 @@
 </template>
 
 <script setup name="AuthUser">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { useMessage, useDialog } from 'naive-ui'
 import selectUser from "./selectUser"
 import { allocatedUserList, authUserCancel, authUserCancelAll } from "../role-api"
-import { useDict } from '@/utils/dict'
+import { useDict } from '@/hooks/use-dict'
 
 const route = useRoute()
 const { sys_normal_disable } = useDict("sys_normal_disable")
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const selectRef = ref()
 
@@ -163,32 +165,36 @@ function openSelectUser() {
 
 /** 取消授权按钮操作 */
 function cancelAuthUser(row) {
-  ElMessageBox.confirm('确认要取消该用户"' + row.userName + '"角色吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    return authUserCancel({ userId: row.userId, roleId: queryParams.roleId })
-  }).then(() => {
-    getList()
-    ElMessage.success("取消授权成功")
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: '确认要取消该用户"' + row.userName + '"角色吗？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return authUserCancel({ userId: row.userId, roleId: queryParams.roleId }).then(() => {
+        getList()
+        message.success("取消授权成功")
+      })
+    }
+  })
 }
 
 /** 批量取消授权按钮操作 */
 function cancelAuthUserAll(row) {
   const roleId = queryParams.roleId
   const uIds = userIds.value.join(",")
-  ElMessageBox.confirm("是否取消选中用户授权数据项?", '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    return authUserCancelAll({ roleId: roleId, userIds: uIds })
-  }).then(() => {
-    getList()
-    ElMessage.success("取消授权成功")
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: '是否取消选中用户授权数据项?',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return authUserCancelAll({ roleId: roleId, userIds: uIds }).then(() => {
+        getList()
+        message.success("取消授权成功")
+      })
+    }
+  })
 }
 
 getList();

@@ -61,9 +61,9 @@
 </template>
 
 <script setup name="SelectUser">
-import { ElMessage } from 'element-plus'
+import { useMessage } from 'naive-ui'
 import { authUserSelectAll, unallocatedUserList } from "../role-api"
-import { useDict } from '@/utils/dict'
+import { useDict } from '@/hooks/use-dict'
 
 const props = defineProps({
   roleId: {
@@ -72,6 +72,7 @@ const props = defineProps({
 })
 
 const { sys_normal_disable } = useDict("sys_normal_disable")
+const message = useMessage()
 const queryRef = ref()
 const refTable = ref()
 
@@ -135,11 +136,11 @@ function handleSelectUser() {
   const roleId = queryParams.roleId
   const uIds = userIds.value.join(",")
   if (uIds == "") {
-    ElMessage.error("请选择要分配的用户")
+    message.error("请选择要分配的用户")
     return
   }
   authUserSelectAll({ roleId: roleId, userIds: uIds }).then(res => {
-    ElMessage.success(res.msg)
+    message.success(res.msg)
     visible.value = false
     emit("ok")
   })

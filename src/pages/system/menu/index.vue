@@ -327,14 +327,16 @@
 </template>
 
 <script setup name="Menu">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { useDialog, useMessage } from 'naive-ui'
 import IconSelect from '@/components/IconSelect/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
-import { useDict } from '@/utils/dict'
+import { useDict } from '@/hooks/use-dict'
 import { handleTree } from '@/utils/ruoyi'
 import { addMenu, delMenu, getMenu, listMenu, updateMenu } from './menu-api'
 
 const { sys_show_hide, sys_normal_disable } = useDict('sys_show_hide', 'sys_normal_disable')
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const menuRef = ref()
 
@@ -469,13 +471,13 @@ function submitForm() {
     if (valid) {
       if (form.value.menuId != undefined) {
         updateMenu(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addMenu(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -486,16 +488,18 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  ElMessageBox.confirm(`是否确认删除名称为"${row.menuName}"的数据项?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delMenu(row.menuId)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除名称为"${row.menuName}"的数据项?`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delMenu(row.menuId).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    },
+  })
 }
 
 getList()

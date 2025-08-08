@@ -202,12 +202,15 @@
 </template>
 
 <script setup name="Data">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import useDictStore from '@/store/modules/dict'
-import { useDict } from '@/utils/dict'
+import { useDialog, useMessage } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
+import { useDictStore } from '@/stores/dict'
 import { addData, delData, getData, optionselect as getDictOptionselect, getType, listData, updateData } from './dict-api'
 
 const { sys_normal_disable } = useDict('sys_normal_disable')
+const message = useMessage()
+const dialog = useDialog()
+
 const queryRef = ref()
 const dataRef = ref()
 
@@ -355,14 +358,14 @@ function submitForm() {
       if (form.value.dictCode != undefined) {
         updateData(form.value).then((response) => {
           useDictStore().removeDict(queryParams.value.dictType)
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addData(form.value).then((response) => {
           useDictStore().removeDict(queryParams.value.dictType)
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -374,17 +377,19 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const dictCodes = row.dictCode || ids.value
-  ElMessageBox.confirm(`是否确认删除字典编码为"${dictCodes}"的数据项？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delData(dictCodes)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-    useDictStore().removeDict(queryParams.value.dictType)
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除字典编码为"${dictCodes}"的数据项？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delData(dictCodes).then(() => {
+        getList()
+        message.success('删除成功')
+        useDictStore().removeDict(queryParams.value.dictType)
+      })
+    },
+  })
 }
 
 /** 导出按钮操作 */

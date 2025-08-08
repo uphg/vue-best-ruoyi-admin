@@ -179,11 +179,13 @@
 </template>
 
 <script setup name="Notice">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDict } from '@/utils/dict'
+import { useMessage, useDialog } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
 import { addNotice, delNotice, getNotice, listNotice, updateNotice } from './notice-api'
 
 const { sys_notice_status, sys_notice_type } = useDict('sys_notice_status', 'sys_notice_type')
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const noticeRef = ref()
 
@@ -289,13 +291,13 @@ function submitForm() {
     if (valid) {
       if (form.value.noticeId != undefined) {
         updateNotice(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addNotice(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -307,16 +309,18 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const noticeIds = row.noticeId || ids.value
-  ElMessageBox.confirm(`是否确认删除公告编号为"${noticeIds}"的数据项？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delNotice(noticeIds)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除公告编号为"${noticeIds}"的数据项？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delNotice(noticeIds).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    }
+  })
 }
 
 getList()

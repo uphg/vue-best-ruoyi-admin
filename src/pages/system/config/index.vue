@@ -189,8 +189,8 @@
 </template>
 
 <script setup name="Config">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDict } from '@/utils/dict'
+import { useMessage, useDialog } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
 import { addDateRange } from '@/utils/ruoyi'
 import { addConfig, delConfig, getConfig, listConfig, refreshCache, updateConfig } from './config-api'
 
@@ -226,6 +226,9 @@ const data = reactive({
 })
 
 const { queryParams, form, rules } = toRefs(data)
+
+const message = useMessage()
+const dialog = useDialog()
 
 /** 查询参数列表 */
 function getList() {
@@ -304,13 +307,13 @@ function submitForm() {
     if (valid) {
       if (form.value.configId != undefined) {
         updateConfig(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addConfig(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -322,16 +325,18 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const configIds = row.configId || ids.value
-  ElMessageBox.confirm(`是否确认删除参数编号为"${configIds}"的数据项？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delConfig(configIds)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除参数编号为"${configIds}"的数据项？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delConfig(configIds).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    }
+  })
 }
 
 /** 导出按钮操作 */
@@ -343,7 +348,7 @@ function handleExport() {
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {
   refreshCache().then(() => {
-    ElMessage.success('刷新缓存成功')
+    message.success('刷新缓存成功')
   })
 }
 

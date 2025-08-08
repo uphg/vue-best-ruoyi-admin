@@ -1,4 +1,4 @@
-import { http } from '@/utils/http-lite'
+import { http } from '@/utils/http'
 
 // RuoYi 格式接口
 export function apiGetRouteData() {
@@ -18,14 +18,14 @@ export function apiGetCaptchaImage() {
 }
 
 // 兼容性接口（保留旧的）
-export function apiGetRouteDataLegacy() {
-  return http.get('/api/route-data')
-}
+// export function apiGetRouteDataLegacy() {
+//   return http.get('/api/route-data')
+// }
 
-export function apiGetUserInfoLegacy() {
-  return http.get('/api/user-info')
-}
+// export function apiGetUserInfoLegacy() {
+//   return http.get('/api/user-info')
+// }
 
-export function apiLoginLegacy(data) {
-  return http.post('/api/login', data)
-}
+// export function apiLoginLegacy(data) {
+//   return http.post('/api/login', data)
+// }

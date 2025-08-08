@@ -1,28 +1,30 @@
-import axios from 'axios'
 import { saveAs } from 'file-saver'
 import { createLoading } from '@/hooks/use-loading'
 import { useNaiveDialog, useNaiveMessage, useNaiveNotification } from '@/hooks/use-message'
-import cache from '@/plugins/cache'
-import useUserStore from '@/store/modules/user'
+// import useUserStore from '@/store/modules/user'
 import { getToken } from '@/utils/auth'
-import errorCode from '@/utils/errorCode'
 import { blobValidate, tansParams } from '@/utils/ruoyi'
+import { session } from '@/utils/storage'
+import { Http } from './http-lite'
+
+const errorCode = {
+  401: '认证失败，无法访问系统资源',
+  403: '当前操作没有权限',
+  404: '访问资源不存在',
+  default: '系统未知错误，请反馈给管理员',
+}
 
 let downloadLoadingInstance
-// // 是否显示重新登录
 export const isRelogin = { show: false }
 
-// axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
-// 创建axios实例
-const service = axios.create({
-  // axios中请求配置有baseURL选项，表示请求URL公共部分
+// http.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+export const http = new Http({
   baseURL: import.meta.env.VITE_APP_BASE_API,
-  // 超时
   timeout: 10000,
 })
 
 // request拦截器
-service.interceptors.request.use((config) => {
+http.instance.interceptors.request.use((config) => {
   // 是否需要设置 token
   const isToken = (config.headers || {}).isToken === false
   // 是否需要防止数据重复提交
@@ -49,9 +51,9 @@ service.interceptors.request.use((config) => {
       console.warn(`[${config.url}]: ` + '请求数据大小超出允许的5M限制，无法进行防重复提交验证。')
       return config
     }
-    const sessionObj = cache.session.getJSON('sessionObj')
+    const sessionObj = session.getJSON('sessionObj')
     if (sessionObj === undefined || sessionObj === null || sessionObj === '') {
-      cache.session.setJSON('sessionObj', requestObj)
+      session.setJSON('sessionObj', requestObj)
     } else {
       const s_url = sessionObj.url // 请求地址
       const s_data = sessionObj.data // 请求数据
@@ -62,7 +64,7 @@ service.interceptors.request.use((config) => {
         console.warn(`[${s_url}]: ${message}`)
         return Promise.reject(new Error(message))
       } else {
-        cache.session.setJSON('sessionObj', requestObj)
+        session.setJSON('sessionObj', requestObj)
       }
     }
   }
@@ -73,7 +75,7 @@ service.interceptors.request.use((config) => {
 })
 
 // 响应拦截器
-service.interceptors.response.use((res) => {
+http.instance.interceptors.response.use((res) => {
   // 未设置状态码则默认成功状态
   const code = res.data.code || 200
   // 获取错误信息
@@ -93,9 +95,9 @@ service.interceptors.response.use((res) => {
         negativeText: '取消',
         onPositiveClick: () => {
           isRelogin.show = false
-          useUserStore().logOut().then(() => {
-            location.href = '/index'
-          })
+          // useUserStore().logOut().then(() => {
+          //   location.href = '/index'
+          // })
         },
         onNegativeClick: () => {
           isRelogin.show = false
@@ -140,7 +142,7 @@ service.interceptors.response.use((res) => {
 // 通用下载方法
 export function download(url, params, filename, config) {
   downloadLoadingInstance = createLoading({ content: '正在下载数据，请稍候' })
-  return service.post(url, params, {
+  return http.post(url, params, {
     transformRequest: [(params) => { return tansParams(params) }],
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     responseType: 'blob',
@@ -165,5 +167,3 @@ export function download(url, params, filename, config) {
     downloadLoadingInstance.close()
   })
 }
-
-export default service

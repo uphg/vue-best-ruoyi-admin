@@ -196,13 +196,15 @@
 </template>
 
 <script setup name="Dict">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import useDictStore from '@/store/modules/dict'
-import { useDict } from '@/utils/dict'
+import { useDialog, useMessage } from 'naive-ui'
+import { useDict } from '@/hooks/use-dict'
+import { useDictStore } from '@/stores/dict'
 import { addDateRange } from '@/utils/ruoyi'
 import { addType, delType, getType, listType, refreshCache, updateType } from './dict-api'
 
 const { sys_normal_disable } = useDict('sys_normal_disable')
+const message = useMessage()
+const dialog = useDialog()
 const queryRef = ref()
 const dictRef = ref()
 
@@ -310,13 +312,13 @@ function submitForm() {
     if (valid) {
       if (form.value.dictId != undefined) {
         updateType(form.value).then((response) => {
-          ElMessage.success('修改成功')
+          message.success('修改成功')
           open.value = false
           getList()
         })
       } else {
         addType(form.value).then((response) => {
-          ElMessage.success('新增成功')
+          message.success('新增成功')
           open.value = false
           getList()
         })
@@ -328,16 +330,18 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const dictIds = row.dictId || ids.value
-  ElMessageBox.confirm(`是否确认删除字典编号为"${dictIds}"的数据项？`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    return delType(dictIds)
-  }).then(() => {
-    getList()
-    ElMessage.success('删除成功')
-  }).catch(() => {})
+  dialog.warning({
+    title: '提示',
+    content: `是否确认删除字典编号为"${dictIds}"的数据项？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      return delType(dictIds).then(() => {
+        getList()
+        message.success('删除成功')
+      })
+    },
+  })
 }
 
 /** 导出按钮操作 */
@@ -349,7 +353,7 @@ function handleExport() {
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {
   refreshCache().then(() => {
-    ElMessage.success('刷新成功')
+    message.success('刷新成功')
     useDictStore().cleanDict()
   })
 }
