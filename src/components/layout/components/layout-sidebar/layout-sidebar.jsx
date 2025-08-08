@@ -5,9 +5,7 @@ import { useSidebarStore } from '@/stores/sidebar'
 
 const LayoutSidebar = defineComponent(() => {
   const sidebar = useSidebarStore()
-  /** @type {import('vue').Ref<string[]>} */
   const expandedKeys = ref([])
-  /** @type {import('vue').Ref<string | undefined>} */
   const selectedKey = ref()
   const route = useRoute()
   watch(() => route.fullPath, handleMenuExpand)

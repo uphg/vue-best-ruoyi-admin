@@ -1,12 +1,6 @@
 import { NButton, NCard, NForm, NFormItem, NInput } from 'naive-ui'
 import { apiLogin } from '@/api/user'
-import { setToken } from '@/utils/token'
-
-/**
- * @typedef {object} LoginForm
- * @property {string} username - 用户名
- * @property {string} password - 密码
- */
+import { setToken } from '@/utils/auth'
 
 const LoginPage = defineComponent({
   setup() {
@@ -24,10 +18,7 @@ const LoginPage = defineComponent({
       ],
     }
 
-    /**
-     * 处理登录逻辑
-     */
-    const handleLogin = () => {
+    function handleLogin() {
       formRef.value?.validate(async (errors) => {
         if (errors) return
         loading.value = true
