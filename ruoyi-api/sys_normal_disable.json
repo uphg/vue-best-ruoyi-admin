@@ -1,0 +1,46 @@
+{
+  "msg": "操作成功",
+  "code": 200,
+  "data": [
+    {
+      "createBy": "admin",
+      "createTime": "2025-08-05 08:57:44",
+      "updateBy": null,
+      "updateTime": null,
+      "remark": "正常状态",
+      "params": {
+        "@type": "java.util.HashMap"
+      },
+      "dictCode": 6,
+      "dictSort": 1,
+      "dictLabel": "正常",
+      "dictValue": "0",
+      "dictType": "sys_normal_disable",
+      "cssClass": null,
+      "listClass": "primary",
+      "isDefault": "Y",
+      "status": "0",
+      "default": true
+    },
+    {
+      "createBy": "admin",
+      "createTime": "2025-08-05 08:57:44",
+      "updateBy": null,
+      "updateTime": null,
+      "remark": "停用状态",
+      "params": {
+        "@type": "java.util.HashMap"
+      },
+      "dictCode": 7,
+      "dictSort": 2,
+      "dictLabel": "停用",
+      "dictValue": "1",
+      "dictType": "sys_normal_disable",
+      "cssClass": null,
+      "listClass": "danger",
+      "isDefault": "N",
+      "status": "0",
+      "default": false
+    }
+  ]
+}
