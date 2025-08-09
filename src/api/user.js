@@ -1,4 +1,4 @@
-import { http } from '@/utils/http'
+import { http } from '@/utils/request'
 
 // RuoYi 格式接口
 export function apiGetRouteData() {

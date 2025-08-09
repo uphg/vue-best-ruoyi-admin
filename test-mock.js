@@ -1,5 +1,5 @@
 // 测试mock服务
-import { http } from '@/utils/http'
+import { http } from '@/utils/request'
 
 async function testMockServices() {
   console.log('测试RuoYi格式mock服务...')

@@ -23,7 +23,9 @@ export const http = new Http({
   timeout: 10000,
 })
 
-// request拦截器
+export const request = http.instance
+
+// 请求拦截器
 http.instance.interceptors.request.use((config) => {
   // 是否需要设置 token
   const isToken = (config.headers || {}).isToken === false

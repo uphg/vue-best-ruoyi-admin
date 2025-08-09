@@ -276,11 +276,11 @@
 </template>
 
 <script setup name="Role">
-import { useMessage, useDialog } from 'naive-ui'
+import { useDialog, useMessage } from 'naive-ui'
 import { useDict } from '@/hooks/use-dict'
 import { addDateRange } from '@/utils/ruoyi'
 import { treeselect as menuTreeselect, roleMenuTreeselect } from '../menu/menu-api'
-import { addRole, changeRoleStatus, dataScope, delRole, deptTreeSelect, getRole, listRole, updateRole } from '../role-api'
+import { addRole, changeRoleStatus, dataScope, delRole, deptTreeSelect, getRole, listRole, updateRole } from './role-api'
 
 const router = useRouter()
 const { sys_normal_disable } = useDict('sys_normal_disable')
@@ -374,7 +374,7 @@ function handleDelete(row) {
         getList()
         message.success('删除成功')
       })
-    }
+    },
   })
 }
 
@@ -406,7 +406,7 @@ function handleStatusChange(row) {
     },
     onNegativeClick: () => {
       row.status = row.status === '0' ? '1' : '0'
-    }
+    },
   })
 }
 

@@ -19,28 +19,26 @@ export function loadRouterGuard(router) {
   const userStore = useUserStore()
   const sidebarStore = useSidebarStore()
   let hasLoadedPermission = false
-  
+
   router.beforeEach(async (to, from) => {
     // 已登录且有用户信息
     if (userStore.id) {
       return toPermissionRoute(to, from)
     }
-    
+
     const token = getToken()
     if (!token) {
       return toCommonRoute(to, from)
     }
-    
+
     // 首次加载权限信息
     if (!hasLoadedPermission) {
       hasLoadedPermission = true
       await loadPermissionInfo(router, { userStore, sidebarStore })
-      // 如果当前是根路径，重定向到 /home
-      if (to.path === '/') {
-        return '/home'
-      }
+      // 权限信息加载完成后，重新导航到目标路由
+      return to.fullPath
     }
-    
+
     return true
   })
 }
@@ -96,11 +94,13 @@ function toCommonRoute(to, _from) {
  * @returns {boolean|string} 返回 true 继续跳转，或返回重定向路径
  */
 function toPermissionRoute(to, _from) {
+  console.log('toPermissionRoute')
+  console.log(to)
   // 避免从根路径到 /home 的无限重定向
   if (to.path === '/home' && _from.path === '/') {
     return true
   }
-  
+
   if (to?.name && commonRoutes.includes(to.name)) {
     return '/home'
   } else {

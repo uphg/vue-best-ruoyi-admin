@@ -16,7 +16,7 @@ import Home from '@/pages/home/home-page'
  * @property {string} [name] - 路由名称
  * @property {string} [redirect] - 重定向路径
  * @property {boolean} [hidden] - 是否在菜单中隐藏
- * @property {boolean} [mergeSingleChild] - 是否合并单个子路由
+ * @property {boolean} [alwaysShow] - 是否合并单个子路由
  * @property {RouteConfig[]} [children] - 子路由配置
  * @property {RouteMetaInfo} [meta] - 路由元信息
  */
@@ -30,7 +30,7 @@ export const constantRoutes = [
     path: '',
     component: LayoutDefault,
     redirect: '/home',
-    mergeSingleChild: true,
+    // alwaysShow: true,
     children: [
       {
         path: 'home',
