@@ -98,7 +98,7 @@ const LayoutSidebar = defineComponent(() => {
           value={selectedKey.value}
           default-value={selectedKey.value}
           render-label={renderMenuLabel}
-          render-icon={renderMenuIcon}
+          // render-icon={renderMenuIcon}
         />
       </NLayoutContent>
     </NLayoutSider>

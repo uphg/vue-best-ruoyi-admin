@@ -10,7 +10,7 @@
  * @property {string} path - 路由路径
  * @property {string} [redirect] - 重定向路径
  * @property {string} component - 组件名称
- * @property {boolean} [mergeSingleChild] - 是否合并单个子项
+ * @property {boolean} [alwaysShow] - 是否合并单个子项
  * @property {RouteMeta} [meta] - 路由元信息
  * @property {RouteItem[]} [children] - 子路由数组
  */
@@ -24,7 +24,7 @@ export const routeDate = [
   {
     path: '/about',
     component: 'Default',
-    mergeSingleChild: true,
+    alwaysShow: true,
     children: [
       {
         path: 'base',
@@ -39,7 +39,7 @@ export const routeDate = [
   {
     path: '/icon',
     component: 'Default',
-    mergeSingleChild: true,
+    alwaysShow: true,
     children: [
       {
         path: 'base',
@@ -55,7 +55,7 @@ export const routeDate = [
   {
     path: '/request',
     component: 'Default',
-    mergeSingleChild: true,
+    alwaysShow: true,
     children: [
       {
         path: 'base',

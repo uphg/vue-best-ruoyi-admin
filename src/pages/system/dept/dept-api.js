@@ -1,4 +1,4 @@
-import request from '@/utils/http'
+import { request } from '@/utils/request'
 
 // 查询部门列表
 export function listDept(query) {

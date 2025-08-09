@@ -108,7 +108,7 @@ function baseCreateMenus(routes, menusMap, options) {
   const { paths = [], matchs = [] } = options ?? {}
   const menus = []
   for (const route of routes) {
-    const { path, name, meta, children, hidden, ...rest } = (route?.mergeSingleChild ? getOnlyChildMenu(route) : route) ?? {}
+    const { path, name, meta, children, hidden, ...rest } = (route?.alwaysShow ? route : getOnlyChildMenu(route)) ?? {}
     if (hidden === true) continue
     const newPaths = [...paths, path]
     const newPath = pathJoin(newPaths)
@@ -117,7 +117,7 @@ function baseCreateMenus(routes, menusMap, options) {
       key: name,
       path: newPath,
       type: 'item',
-      icon: meta?.icon && iconsMap?.[meta.icon],
+      // icon: meta?.icon && iconsMap?.[meta.icon],
       show: hidden !== true,
       matchs: [...matchs, { meta, path, name }],
       ...rest,

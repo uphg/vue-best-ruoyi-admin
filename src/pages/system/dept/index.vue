@@ -161,7 +161,7 @@
 </template>
 
 <script setup name="Dept">
-import { useMessage, useDialog } from 'naive-ui'
+import { useDialog, useMessage } from 'naive-ui'
 import { useDict } from '@/hooks/use-dict'
 import { handleTree } from '@/utils/ruoyi'
 import { addDept, delDept, getDept, listDept, listDeptExcludeChild, updateDept } from './dept-api'
@@ -312,7 +312,7 @@ function handleDelete(row) {
         getList()
         message.success('删除成功')
       })
-    }
+    },
   })
 }
 
