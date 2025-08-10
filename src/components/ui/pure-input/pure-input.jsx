@@ -1,4 +1,4 @@
-import { cn } from '@/utils/class-merge'
+import { cn } from '@/utils/merge-class'
 
 /**
  * 纯净输入框组件
@@ -90,7 +90,7 @@ const PureInput = defineComponent({
         placeholder={props.placeholder}
         disabled={props.disabled}
         readonly={props.readonly}
-        class={cn(
+        class={mergeClass(
           'px-3 py-2 border border-gray-300 rounded-3px text-sm transition-colors duration-200',
           'focus:outline-none',
           'disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500',
