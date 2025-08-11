@@ -1,6 +1,6 @@
 import { NIcon } from 'naive-ui'
 import IconX from '~icons/lucide/x'
-import { cn } from '@/utils/class-merge'
+import { cn } from '@/utils/merge-class.js'
 import PureButton from '../pure-button/pure-button.jsx'
 
 /**
@@ -70,7 +70,7 @@ const Tag = defineComponent({
     }
 
     const tagClasses = computed(() => {
-      return cn(
+      return mergeClass(
       // 基础样式
         'inline-flex items-center px-1.5 py-1 text-sm font-medium transition-colors duration-200 focus:outline-none',
 

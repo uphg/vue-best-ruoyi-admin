@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* tslint:disable */
 
 /**
@@ -11,15 +12,15 @@ const INTEGRITY_CHECKSUM = 'f5825c521429caf22a4dd13b66e243af'
 const IS_MOCKED_RESPONSE = Symbol('isMockedResponse')
 const activeClientIds = new Set()
 
-addEventListener('install', () => {
+addEventListener('install', function () {
   self.skipWaiting()
 })
 
-addEventListener('activate', (event) => {
+addEventListener('activate', function (event) {
   event.waitUntil(self.clients.claim())
 })
 
-addEventListener('message', async (event) => {
+addEventListener('message', async function (event) {
   const clientId = Reflect.get(event.source || {}, 'id')
 
   if (!clientId || !self.clients) {
@@ -92,7 +93,7 @@ addEventListener('message', async (event) => {
   }
 })
 
-addEventListener('fetch', (event) => {
+addEventListener('fetch', function (event) {
   // Bypass navigation requests.
   if (event.request.mode === 'navigate') {
     return
@@ -101,8 +102,8 @@ addEventListener('fetch', (event) => {
   // Opening the DevTools triggers the "only-if-cached" request
   // that cannot be handled by the worker. Bypass such requests.
   if (
-    event.request.cache === 'only-if-cached'
-    && event.request.mode !== 'same-origin'
+    event.request.cache === 'only-if-cached' &&
+    event.request.mode !== 'same-origin'
   ) {
     return
   }
@@ -168,7 +169,7 @@ async function handleRequest(event, requestId) {
  * that registered the worker. It's with the latter the worker should
  * communicate with during the response resolving phase.
  * @param {FetchEvent} event
- * @returns {Promise<Client | undefined>} promise
+ * @returns {Promise<Client | undefined>}
  */
 async function resolveMainClient(event) {
   const client = await self.clients.get(event.clientId)
@@ -201,7 +202,7 @@ async function resolveMainClient(event) {
  * @param {FetchEvent} event
  * @param {Client | undefined} client
  * @param {string} requestId
- * @returns {Promise<Response>} promise
+ * @returns {Promise<Response>}
  */
 async function getResponse(event, client, requestId) {
   // Clone the request because it might've been already used
@@ -218,9 +219,9 @@ async function getResponse(event, client, requestId) {
     // user-defined CORS policies.
     const acceptHeader = headers.get('accept')
     if (acceptHeader) {
-      const values = acceptHeader.split(',').map(value => value.trim())
+      const values = acceptHeader.split(',').map((value) => value.trim())
       const filteredValues = values.filter(
-        value => value !== 'msw/passthrough',
+        (value) => value !== 'msw/passthrough',
       )
 
       if (filteredValues.length > 0) {
@@ -277,7 +278,7 @@ async function getResponse(event, client, requestId) {
  * @param {Client} client
  * @param {any} message
  * @param {Array<Transferable>} transferrables
- * @returns {Promise<any>} promise
+ * @returns {Promise<any>}
  */
 function sendToClient(client, message, transferrables = []) {
   return new Promise((resolve, reject) => {
@@ -300,7 +301,7 @@ function sendToClient(client, message, transferrables = []) {
 
 /**
  * @param {Response} response
- * @returns {Response} response
+ * @returns {Response}
  */
 function respondWithMock(response) {
   // Setting response status code to 0 is a no-op.

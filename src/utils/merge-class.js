@@ -9,10 +9,10 @@ import { twMerge } from 'tailwind-merge'
  * @returns {string} 合并后的类名字符串
  *
  * @example
- * cn('px-2 py-1', 'px-4') // 返回 'py-1 px-4' (px-4 覆盖 px-2)
- * cn('text-red-500', { 'text-blue-500': true }) // 返回 'text-blue-500'
- * cn(['bg-white', 'text-black'], 'bg-gray-100') // 返回 'text-black bg-gray-100'
+ * mergeClass('px-2 py-1', 'px-4') // 返回 'py-1 px-4' (px-4 覆盖 px-2)
+ * mergeClass('text-red-500', { 'text-blue-500': true }) // 返回 'text-blue-500'
+ * mergeClass(['bg-white', 'text-black'], 'bg-gray-100') // 返回 'text-black bg-gray-100'
  */
-export function cn(...inputs) {
+export function mergeClass(...inputs) {
   return twMerge(clsx(inputs))
 }

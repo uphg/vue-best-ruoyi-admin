@@ -1,4 +1,4 @@
-import { cn } from '@/utils/class-merge'
+import { cn } from '@/utils/merge-class'
 
 /**
  * 纯净按钮组件
@@ -20,7 +20,7 @@ const PureButton = defineComponent({
     return () => (
       <button
         {...props}
-        class={cn('text-black rounded-3px border-none bg-transparent cursor-pointer transition-colors duration-300 focus:outline-none active:bg-neutral-800/13 focus:bg-neutral-800/9 hover:bg-neutral-800/9', props.class)}
+        class={mergeClass('text-black rounded-3px border-none bg-transparent cursor-pointer transition-colors duration-300 focus:outline-none active:bg-neutral-800/13 focus:bg-neutral-800/9 hover:bg-neutral-800/9', props.class)}
       >
         {slots.default?.()}
       </button>
