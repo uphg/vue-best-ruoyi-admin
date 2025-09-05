@@ -78,7 +78,7 @@ export function useDataTable(
   return [
     () => (
       <div>
-        <NDataTable class={rawProps.tableClass} data={data.value} columns={columns.value} loading={loading.value} {...nTableProps}>
+        <NDataTable {...nTableProps} class={rawProps.tableClass} data={data.value} columns={columns.value} loading={loading.value}>
           {slots}
         </NDataTable>
         <div class={mergeClass('mt-3 flex justify-end', rawProps.pagingWrapClass)}>
